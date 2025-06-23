@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Upload File</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Top Navigation Bar -->
+  <div class="w-full bg-white shadow flex justify-end p-4">
+    <a href="{% url 'logout_credentials' %}" 
+       class="bg-red-600 text-white px-4 py-2 rounded shadow">
+      Logout & Reset Credentials
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-lg mx-auto bg-white p-10 rounded-lg shadow mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Upload Excel/CSV File</h2>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+      {% csrf_token %}
+      <input type="file" name="file" required class="block w-full border rounded p-2">
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Upload
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

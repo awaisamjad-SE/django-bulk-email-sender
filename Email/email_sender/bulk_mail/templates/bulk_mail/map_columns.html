@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Map Columns & Send Emails</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-20">
+
+  <div class="max-w-lg mx-auto bg-white p-10 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center text-green-600">Column Names & Email Content</h2>
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      <div>
+        <label class="font-semibold">Email Column Name:</label>
+        <input type="text" name="email_column" placeholder="e.g. Email" required class="block w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Name Column Name (Optional):</label>
+        <input type="text" name="name_column" placeholder="e.g. Name" class="block w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Subject:</label>
+        <input type="text" name="subject" required class="block w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Message Body (Use {name} for personalization):</label>
+        <textarea name="body" rows="8" class="block w-full border rounded p-2" required></textarea>
+      </div>
+
+      <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+        Send Emails
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>
