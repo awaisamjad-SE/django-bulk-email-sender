@@ -116,6 +116,13 @@ USE_I18N = True
 USE_TZ = True
 
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://137.184.144.238",
+    "http://137.184.144.238:8000",
+    "https://dolphin-app-kavaj.ondigitalocean.app/"
+]
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
