@@ -117,9 +117,7 @@ USE_TZ = True
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://137.184.144.238",
-    "http://137.184.144.238:8000",
-    "https://dolphin-app-kavaj.ondigitalocean.app/"
+    'https://dolphin-app-kavaj.ondigitalocean.app'
 ]
 
 
