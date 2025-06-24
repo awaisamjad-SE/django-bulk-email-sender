@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SoftMailer - Pricing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <div class="flex items-center">
+        <span class="font-bold text-2xl text-blue-700">SoftMailer</span>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="{% url 'get_email_credentials' %}" class="text-gray-600 hover:text-blue-700">Home</a>
+        <a href="{% url 'pricing' %}" class="text-blue-700 font-semibold">Pricing</a>
+        <a href="{% url 'support' %}" class="text-gray-600 hover:text-blue-700">Support</a>
+
+      </nav>    
+    </div>
+  </header>
+
+  <!-- Pricing Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-4xl font-bold text-blue-700 mb-4">Simple & Transparent Pricing</h2>
+      <p class="text-gray-500 mb-10">SoftMailer is completely FREE. You can start sending emails immediately by using your own Gmail or other email accounts. The sending limit depends on your connected account’s daily email limit.</p>
+
+      <div class="bg-white rounded-lg shadow-xl p-8">
+        <h3 class="text-3xl font-bold text-blue-600 mb-4">Free Plan</h3>
+        <ul class="text-left mb-6 text-gray-700 space-y-3">
+          <li>✅ Unlimited access to platform features</li>
+          <li>✅ Connect your own Gmail or other SMTP account</li>
+          <li>✅ Sending limit based on your email provider</li>
+          <li>✅ Google Gmail limit ~500 emails/day (per account)</li>
+          <li>✅ Fully secure - credentials not stored</li>
+        </ul>
+         <a href="{% url 'get_email_credentials' %}" 
+       class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded text-lg font-semibold transition">
+      Get Started Free
+    </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-4">
+    <div class="container mx-auto text-center text-gray-500 text-sm">
+      © 2025 SoftSincs. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

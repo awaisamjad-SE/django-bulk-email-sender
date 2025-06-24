@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Success</title>
+  <title >Success - Email Summary</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen relative">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
   <!-- Top Navigation Bar -->
   <div class="w-full bg-white shadow flex justify-end p-4">
@@ -14,16 +14,26 @@
     </a>
   </div>
 
-  <!-- Your main page content -->
-  <div class="flex items-center justify-center h-[80vh]">
-    <div class="bg-white p-8 rounded-lg shadow text-center">
-      <h2 class="text-2xl font-bold mb-4">Emails Sent Successfully!</h2>
-      <a href="{% url 'upload_file' %}" 
-         class="bg-blue-600 text-white px-4 py-2 rounded shadow">
+  <!-- Main Content -->
+  <main class="flex-grow flex items-center justify-center py-10">
+    <div class="bg-white p-10 rounded-lg shadow w-full max-w-lg border border-blue-200 text-center">
+      <h2 class="text-3xl font-bold mb-6 text-blue-600 ">Emails Sent Successfully!</h2>
+
+      <div class="mb-6">
+        <p class="text-lg font-semibold">Total Emails: <span class="text-blue-700">{{ total }}</span></p>
+        <p class="text-lg font-semibold">Success: <span class="text-green-600">{{ success }}</span></p>
+        <p class="text-lg font-semibold">Failed: <span class="text-red-600">{{ failed }}</span></p>
+      </div>
+
+      <div class="mb-8">
+        <img src="data:image/png;base64,{{ graph }}" alt="Email Results Chart" class="mx-auto rounded shadow">
+      </div>
+
+      <a href="{% url 'upload_file' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
         Send Another
       </a>
     </div>
-  </div>
+  </main>
 
 </body>
 </html>

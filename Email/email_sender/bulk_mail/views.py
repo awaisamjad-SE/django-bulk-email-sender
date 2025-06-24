@@ -4,6 +4,12 @@ from django.shortcuts import render, redirect
 from .forms import FileUploadForm, ColumnMappingForm
 import smtplib
 from email.mime.text import MIMEText
+import matplotlib
+matplotlib.use('Agg')  # Use non-GUI backend
+import matplotlib.pyplot as plt
+import io, base64
+
+from django.shortcuts import render
 
 import smtplib
 
@@ -56,10 +62,18 @@ def upload_file(request):
     else:
         form = FileUploadForm()
     return render(request, 'bulk_mail/upload.html', {'form': form})
-
-# Map columns view
 def map_columns(request):
+    # Protect: If no file uploaded, redirect
+    if not request.session.get('data'):
+        return redirect('upload_file')
+
     if request.method == 'POST':
+        # (same code as before here...)
+
+        # your email sending logic...
+        # your graph generation logic...
+
+        return render(request, 'bulk_mail/success.html', context)
         name_column = request.POST.get('name_column', '').strip()
         email_column = request.POST.get('email_column').strip()
         subject = request.POST.get('subject').strip()
@@ -85,7 +99,7 @@ def map_columns(request):
             message = f"Error: The following columns were not found: {', '.join(missing_columns)}"
             return render(request, 'bulk_mail/error.html', {'message': message})
         
-        # Get credentials from session (THIS IS WHERE YOU USE IT)
+        # Get credentials from session
         sender_email = request.session.get('sender_email')
         app_password = request.session.get('app_password')
 
@@ -99,7 +113,6 @@ def map_columns(request):
 
             personalized_body = body_template.replace("{name}", name if name else "")
 
-            # Use the credentials you got from session
             result = send_email(email, subject, personalized_body, sender_email, app_password)
             
             if result == "success":
@@ -107,13 +120,42 @@ def map_columns(request):
             else:
                 failed_emails.append((email, result))
 
+        # Count totals
+        total_count = len(success_emails) + len(failed_emails)
+        success_count = len(success_emails)
+        failed_count = len(failed_emails)
+
+        # Generate bar chart
+        labels = ['Success', 'Failed']
+        values = [success_count, failed_count]
+
+        fig, ax = plt.subplots()
+        ax.bar(labels, values, color=['#22c55e', '#ef4444'])
+        ax.set_title('Email Sending Results')
+        ax.set_ylabel('Count')
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        buf.close()
+
         context = {
-            'success_emails': success_emails,
-            'failed_emails': failed_emails
+            'total': total_count,
+            'success': success_count,
+            'failed': failed_count,
+            'graph': image_base64
         }
-        return render(request, 'bulk_mail/success.html', context)
 
     return render(request, 'bulk_mail/map_columns.html')
+
+
+# # Map columns view
+# def map_columns(request):
+#     if request.method == 'POST':
+#         return render(request, 'bulk_mail/success.html', context)
+
+#     return render(request, 'bulk_mail/map_columns.html')
 
 # Email sending function
 def send_email(to_email, subject, body, sender_email, app_password):
@@ -135,3 +177,52 @@ def send_email(to_email, subject, body, sender_email, app_password):
 def logout_credentials(request):
     request.session.flush()  # completely clear the session
     return redirect('get_email_credentials')  # redirect to credentials page
+def pricing_view(request):
+    return render(request, 'pricing.html')
+
+def support_view(request):
+    return render(request, 'Support.html')
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
+from django.shortcuts import render
+
+def success_view(request):
+    # For demo purpose let's assume:
+    total_count = 100
+    success_count = 80
+    failed_count = 20
+
+    # Create the bar chart
+    labels = ['Success', 'Failed']
+    values = [success_count, failed_count]
+
+    fig, ax = plt.subplots()
+    ax.bar(labels, values, color=['#22c55e', '#ef4444'])
+    ax.set_title('Email Sending Results')
+    ax.set_ylabel('Count')
+
+    # Save the plot to a bytes buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    context = {
+    'success_emails': success_emails,
+    'failed_emails': failed_emails
+    }
+    return render(request, 'bulk_mail/success.html', context)
+
+# views.py
+
+from django.shortcuts import redirect
+
+def home_view(request):
+    if request.session.get('sender_email') and request.session.get('app_password'):
+        return redirect('upload_file')  # or whatever your upload file url name
+    else:
+        return redirect('get_email_credentials')

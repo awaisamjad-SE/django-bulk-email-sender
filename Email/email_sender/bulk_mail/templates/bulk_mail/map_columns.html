@@ -1,42 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Map Columns & Send Emails</title>
+  <title>SoftMailer - Map Columns & Send Emails</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 py-20">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <div class="max-w-lg mx-auto bg-white p-10 rounded-lg shadow">
-    <h2 class="text-2xl font-bold mb-6 text-center text-green-600">Column Names & Email Content</h2>
-
-    <form method="post" class="space-y-5">
-      {% csrf_token %}
-
-      <div>
-        <label class="font-semibold">Email Column Name:</label>
-        <input type="text" name="email_column" placeholder="e.g. Email" required class="block w-full border rounded p-2">
+  <!-- Header with Logo and Logout -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <span class="text-2xl font-bold text-blue-700">SoftMailer</span>
       </div>
-
       <div>
-        <label class="font-semibold">Name Column Name (Optional):</label>
-        <input type="text" name="name_column" placeholder="e.g. Name" class="block w-full border rounded p-2">
+        <a href="{% url 'logout_credentials' %}" class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 transition">
+          Logout & Reset Credentials
+        </a>
       </div>
+    </div>
+  </header>
 
-      <div>
-        <label class="font-semibold">Subject:</label>
-        <input type="text" name="subject" required class="block w-full border rounded p-2">
-      </div>
+  <!-- Main Content -->
+  <main class="flex-grow flex items-center justify-center py-10">
+    <div class="bg-white p-10 rounded-lg shadow w-full max-w-lg border border-blue-200">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Map Columns & Send Emails</h2>
 
-      <div>
-        <label class="font-semibold">Message Body (Use {name} for personalization):</label>
-        <textarea name="body" rows="8" class="block w-full border rounded p-2" required></textarea>
-      </div>
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
 
-      <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-        Send Emails
-      </button>
-    </form>
-  </div>
+        <div>
+          <label class="font-semibold text-gray-700">Email Column Name:</label>
+          <input type="text" name="email_column" placeholder="e.g. Email" required class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="font-semibold text-gray-700">Name Column Name (Optional):</label>
+          <input type="text" name="name_column" placeholder="e.g. Name" class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="font-semibold text-gray-700">Subject:</label>
+          <input type="text" name="subject" placeholder="e.g. Welcome to SoftMailer" required class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="font-semibold text-gray-700">Message Body <span class="text-sm text-gray-500">(Use <code>{name}</code> for personalization)</span>:</label>
+          <textarea name="body" rows="6" placeholder="Dear {name}, 
+
+Welcome to SoftMailer! We are excited to have you onboard.
+
+Regards,
+SoftSincs Team" class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500" required></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+          Send Emails
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow py-4">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
+      &copy; 2025 SoftSincs - SoftMailer. All rights reserved.
+    </div>
+  </footer>
 
 </body>
 </html>
