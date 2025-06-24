@@ -62,18 +62,9 @@ def upload_file(request):
     else:
         form = FileUploadForm()
     return render(request, 'bulk_mail/upload.html', {'form': form})
+
 def map_columns(request):
-    # Protect: If no file uploaded, redirect
-    if not request.session.get('data'):
-        return redirect('upload_file')
-
     if request.method == 'POST':
-        # (same code as before here...)
-
-        # your email sending logic...
-        # your graph generation logic...
-
-        return render(request, 'bulk_mail/success.html', context)
         name_column = request.POST.get('name_column', '').strip()
         email_column = request.POST.get('email_column').strip()
         subject = request.POST.get('subject').strip()
@@ -140,12 +131,14 @@ def map_columns(request):
         image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
         buf.close()
 
+        # ✅ Now context properly created
         context = {
             'total': total_count,
             'success': success_count,
             'failed': failed_count,
             'graph': image_base64
         }
+        return render(request, 'bulk_mail/success.html', context)
 
     return render(request, 'bulk_mail/map_columns.html')
 
