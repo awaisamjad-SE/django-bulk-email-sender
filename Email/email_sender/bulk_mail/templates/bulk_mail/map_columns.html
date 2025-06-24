@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>SoftMailer - Map Columns & Send Emails</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoftMailer - Map Columns & Send Emails</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
   <!-- Header with Logo and Logout -->
   <header class="bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <span class="text-2xl font-bold text-blue-700">SoftMailer</span>
-      </div>
-      <div>
-        <a href="{% url 'logout_credentials' %}" class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 transition">
-          Logout & Reset Credentials
-        </a>
-      </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <span class="text-2xl font-bold text-blue-700">SoftMailer</span>
+      <a href="{% url 'logout_credentials' %}" 
+         class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 transition">
+        Logout & Reset Credentials
+      </a>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="flex-grow flex items-center justify-center py-10">
-    <div class="bg-white p-10 rounded-lg shadow w-full max-w-lg border border-blue-200">
-      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Map Columns & Send Emails</h2>
+  <main class="flex-grow flex items-center justify-center py-10 px-4 sm:px-6 md:px-8">
+    <div class="bg-white w-full max-w-lg p-6 sm:p-8 md:p-10 rounded-lg shadow border border-blue-200">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-center text-blue-700">Map Columns & Send Emails</h2>
 
       <form method="post" class="space-y-6">
         {% csrf_token %}
 
         <div>
-          <label class="font-semibold text-gray-700">Email Column Name:</label>
-          <input type="text" name="email_column" placeholder="e.g. Email" required class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+          <label class="font-semibold text-gray-700 block mb-1">Email Column Name:</label>
+          <input type="text" name="email_column" placeholder="e.g. Email" required 
+                 class="w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
         </div>
 
         <div>
-          <label class="font-semibold text-gray-700">Name Column Name (Optional):</label>
-          <input type="text" name="name_column" placeholder="e.g. Name" class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+          <label class="font-semibold text-gray-700 block mb-1">Name Column Name (Optional):</label>
+          <input type="text" name="name_column" placeholder="e.g. Name" 
+                 class="w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
         </div>
 
         <div>
-          <label class="font-semibold text-gray-700">Subject:</label>
-          <input type="text" name="subject" placeholder="e.g. Welcome to SoftMailer" required class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
+          <label class="font-semibold text-gray-700 block mb-1">Subject:</label>
+          <input type="text" name="subject" placeholder="e.g. Welcome to SoftMailer" required 
+                 class="w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500">
         </div>
 
         <div>
-          <label class="font-semibold text-gray-700">Message Body <span class="text-sm text-gray-500">(Use <code>{name}</code> for personalization)</span>:</label>
-          <textarea name="body" rows="6" placeholder="Dear {name}, 
+          <label class="font-semibold text-gray-700 block mb-1">
+            Message Body 
+            <span class="text-sm text-gray-500">(Use <code>{name}</code> for personalization)</span>:
+          </label>
+          <textarea name="body" rows="6" required
+                    placeholder="Dear {name}, 
 
 Welcome to SoftMailer! We are excited to have you onboard.
 
 Regards,
-SoftSincs Team" class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500" required></textarea>
+SoftSincs Team"
+                    class="w-full border border-blue-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
 
-        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
           Send Emails
         </button>
       </form>
@@ -64,7 +70,7 @@ SoftSincs Team" class="mt-1 w-full border border-blue-300 rounded-lg p-3 focus:r
 
   <!-- Footer -->
   <footer class="bg-white shadow py-4">
-    <div class="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 text-center text-gray-600 text-sm">
       &copy; 2025 SoftSincs - SoftMailer. All rights reserved.
     </div>
   </footer>
