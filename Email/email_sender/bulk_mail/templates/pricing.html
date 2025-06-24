@@ -18,7 +18,6 @@
         <a href="{% url 'get_email_credentials' %}" class="text-gray-600 hover:text-blue-700">Home</a>
         <a href="{% url 'pricing' %}" class="text-blue-700 font-semibold">Pricing</a>
         <a href="{% url 'support' %}" class="text-gray-600 hover:text-blue-700">Support</a>
-
       </nav>    
     </div>
   </header>
@@ -38,10 +37,22 @@
           <li>✅ Google Gmail limit ~500 emails/day (per account)</li>
           <li>✅ Fully secure - credentials not stored</li>
         </ul>
-         <a href="{% url 'get_email_credentials' %}" 
-       class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded text-lg font-semibold transition">
-      Get Started Free
-    </a>
+        <a href="{% url 'get_email_credentials' %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded text-lg font-semibold transition">
+          Get Started Free
+        </a>
+
+        <div class="mt-10 border-t pt-6">
+          <h4 class="text-lg font-semibold text-gray-700 mb-2">Need More?</h4>
+          <p class="text-gray-500 mb-4">
+            For custom branding, high volume sending, or enterprise solutions — contact us.
+          </p>
+          <a href="mailto:softsincs@gmail.com" 
+             class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded font-medium">
+            Contact Sales
+          </a>
+        </div>
+
       </div>
     </div>
   </section>
