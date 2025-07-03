@@ -97,15 +97,6 @@ from django.shortcuts import render
 from .tasks import send_bulk_emails_task
 from .models import EmailLog
 
-from django.shortcuts import render
-import pandas as pd
-import os
-import matplotlib.pyplot as plt
-import io, base64
-
-from .tasks import send_bulk_emails_task
-from .models import EmailLog
-
 def map_columns(request):
     if request.method == 'POST':
         name_column = request.POST.get('name_column', '').strip()
@@ -142,26 +133,50 @@ def map_columns(request):
         df[email_column] = df[email_column].astype(str).str.strip()
         df = df[df[email_column] != ""]
 
-        # Get email credentials
         sender_email = request.session.get('sender_email')
         app_password = request.session.get('app_password')
 
-        # ✅ Trigger Celery in background
-        df_dict = df.to_dict(orient='records')
-        send_bulk_emails_task.delay(
-            df_dict, subject, body_template,
-            email_column, name_column,
-            sender_email, app_password
-        )
-
+        # Run emails synchronously for live feedback
         total = len(df)
+        success = 0
+        failed = 0
+
+        from .utils import send_email
+        from .models import EmailLog
+
+        for row in df.to_dict(orient='records'):
+            email = row.get(email_column)
+            name = row.get(name_column, "")
+            name = name if name else ""
+            body = body_template.replace("{name}", name)
+
+            try:
+                result = send_email(email, subject, body, sender_email, app_password)
+                if result == "success":
+                    success += 1
+                    EmailLog.objects.create(email=email, status="Success")
+                else:
+                    failed += 1
+                    EmailLog.objects.create(email=email, status="Failed", error=result)
+            except Exception as e:
+                failed += 1
+                EmailLog.objects.create(email=email, status="Failed", error=str(e))
+
+        # Generate bar chart
+        fig, ax = plt.subplots()
+        ax.bar(['Success', 'Failed'], [success, failed], color=['green', 'red'])
+        ax.set_title('Email Results')
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format='png')
+        buffer.seek(0)
+        graph = base64.b64encode(buffer.read()).decode('utf-8')
+        buffer.close()
 
         return render(request, 'bulk_mail/success.html', {
             'total': total,
-            'success': 0,
-            'failed': 0,
-            'graph': '',  # optional: show "emails being sent..." spinner
-            'message': '✅ Emails are being sent in the background. This may take a few minutes.'
+            'success': success,
+            'failed': failed,
+            'graph': graph
         })
 
     return render(request, 'bulk_mail/map_columns.html')
