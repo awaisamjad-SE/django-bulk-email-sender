@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   web:
@@ -8,3 +8,18 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+
+  redis:
+    image: redis:latest
+
+  celery:
+    build: .
+    command: celery -A email_sender worker --loglevel=info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis

@@ -1,3 +1,9 @@
+# bulk_mail/admin.py
 from django.contrib import admin
+from .models import EmailLog
 
-# Register your models here.
+@admin.register(EmailLog)
+class EmailLogAdmin(admin.ModelAdmin):
+    list_display = ('email', 'status', 'timestamp')
+    list_filter = ('status', 'timestamp')
+    search_fields = ('email',)
