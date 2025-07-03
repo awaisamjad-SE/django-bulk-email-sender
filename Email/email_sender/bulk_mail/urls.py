@@ -9,5 +9,7 @@ urlpatterns = [
     path('pricing/', views.pricing_view, name='pricing'),
     path('support/', views.support_view, name='support'),
     path('logs/', views.email_logs_view, name='email_logs'),  # ✅ New
-
+  path('map/', views.map_columns, name='map_columns'),
+    path('success/', views.success_page, name='success_page'),
+  
 ]

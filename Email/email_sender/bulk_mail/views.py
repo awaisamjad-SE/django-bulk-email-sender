@@ -88,14 +88,10 @@ def upload_file(request):
 
     return render(request, 'bulk_mail/upload.html', {'form': form})
 
-# views.py
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import io, base64
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .tasks import send_bulk_emails_task
-from .models import EmailLog
 
 def map_columns(request):
     if request.method == 'POST':
@@ -136,48 +132,19 @@ def map_columns(request):
         sender_email = request.session.get('sender_email')
         app_password = request.session.get('app_password')
 
-        # Run emails synchronously for live feedback
-        total = len(df)
-        success = 0
-        failed = 0
+        # Use Celery to send emails in background
+        send_bulk_emails_task.delay(
+            df.to_dict(orient='records'),
+            subject,
+            body_template,
+            email_column,
+            name_column,
+            sender_email,
+            app_password
+        )
 
-        from .utils import send_email
-        from .models import EmailLog
-
-        for row in df.to_dict(orient='records'):
-            email = row.get(email_column)
-            name = row.get(name_column, "")
-            name = name if name else ""
-            body = body_template.replace("{name}", name)
-
-            try:
-                result = send_email(email, subject, body, sender_email, app_password)
-                if result == "success":
-                    success += 1
-                    EmailLog.objects.create(email=email, status="Success")
-                else:
-                    failed += 1
-                    EmailLog.objects.create(email=email, status="Failed", error=result)
-            except Exception as e:
-                failed += 1
-                EmailLog.objects.create(email=email, status="Failed", error=str(e))
-
-        # Generate bar chart
-        fig, ax = plt.subplots()
-        ax.bar(['Success', 'Failed'], [success, failed], color=['green', 'red'])
-        ax.set_title('Email Results')
-        buffer = io.BytesIO()
-        fig.savefig(buffer, format='png')
-        buffer.seek(0)
-        graph = base64.b64encode(buffer.read()).decode('utf-8')
-        buffer.close()
-
-        return render(request, 'bulk_mail/success.html', {
-            'total': total,
-            'success': success,
-            'failed': failed,
-            'graph': graph
-        })
+        # Redirect to a simple loading or confirmation page
+        return render(request, 'bulk_mail/send_emails_loader.html')
 
     return render(request, 'bulk_mail/map_columns.html')
 
@@ -196,6 +163,42 @@ def pricing_view(request):
 
 def support_view(request):
     return render(request, 'Support.html')
+
+import matplotlib.pyplot as plt
+import io
+import base64
+from django.shortcuts import render
+from .models import EmailLog
+
+def success_page(request):
+    sender_email = request.session.get('sender_email')
+    if not sender_email:
+        return render(request, 'bulk_mail/error.html', {
+            'message': 'Sender email not found in session.'
+        })
+
+    logs = EmailLog.objects.filter(sender=sender_email)
+    total = logs.count()
+    success = logs.filter(status="Success").count()
+    failed = logs.filter(status="Failed").count()
+
+    # Generate chart
+    fig, ax = plt.subplots()
+    ax.bar(['Success', 'Failed'], [success, failed], color=['green', 'red'])
+    ax.set_title('Email Results')
+
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format='png')
+    buffer.seek(0)
+    graph = base64.b64encode(buffer.read()).decode('utf-8')
+    buffer.close()
+
+    return render(request, 'bulk_mail/success.html', {
+        'total': total,
+        'success': success,
+        'failed': failed,
+        'graph': graph
+    })
 
 import matplotlib
 matplotlib.use('Agg')
